@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐾 펫메이트 - 나의 매칭 결과</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="result">
+
+  <!-- 헤더 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span>🐾</span>
+        펫메이트
+      </a>
+      <div class="header-subtitle">매칭 결과</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- 결과 배너 -->
+      <div class="result-banner fade-in">
+        <p class="result-banner-text">
+          🎉 당신에게 딱 맞는 반려동물을 찾았어요!
+        </p>
+      </div>
+
+      <!-- ① 품종 사진 + 기본 정보 -->
+      <div class="pet-photo-card fade-in delay-1">
+        <!-- 품종 사진 -->
+        <div class="pet-image-wrap">
+          <img id="petImage" src="" alt="추천 품종">
+          <div class="pet-image-placeholder" id="petImagePlaceholder"></div>
+        </div>
+
+        <!-- 품종 정보 섹션 -->
+        <div class="pet-info-section">
+
+          <!-- ② 품종명 + 부제 -->
+          <h1 class="pet-name" id="petName">매칭 중...</h1>
+          <p class="pet-subtitle" id="petSubtitle"></p>
+
+          <!-- ③ 매칭도 퍼센트 + 별점 -->
+          <div class="match-score-wrap">
+            <div>
+              <div class="match-percent-label">매칭도</div>
+              <div class="match-percent-value" id="matchPercent">0%</div>
+            </div>
+            <div>
+              <div class="match-percent-label">별점</div>
+              <div class="star-wrap" id="starRating">
+                <!-- JS에서 별점 삽입 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 품종 태그 -->
+          <div class="pet-tags" id="petTags">
+            <!-- JS에서 태그 삽입 -->
+          </div>
+
+          <!-- 한 줄 설명 -->
+          <p class="pet-desc-text" id="petDescription"></p>
+
+        </div>
+      </div>
+
+      <!-- ④ 매칭 포인트 (왜 이 품종인지) -->
+      <div class="card fade-in delay-2">
+        <h2 class="section-title">매칭 포인트</h2>
+        <ul class="match-points-list" id="matchPoints">
+          <!-- JS에서 삽입 -->
+        </ul>
+      </div>
+
+      <!-- ⑤ 성격 특징 막대 그래프 (5개) -->
+      <div class="card fade-in delay-2">
+        <h2 class="section-title">성격 특징</h2>
+        <div id="traitBars">
+          <!-- JS에서 막대 그래프 삽입 -->
+        </div>
+      </div>
+
+      <!-- ⑥ 케어 팁 3가지 -->
+      <div class="card fade-in delay-3">
+        <h2 class="section-title">💡 케어 팁</h2>
+        <ul class="care-tips-list" id="careTipsList">
+          <!-- JS에서 삽입 -->
+        </ul>
+      </div>
+
+      <!-- ⑦ 주의사항 2가지 -->
+      <div class="card fade-in delay-3">
+        <h2 class="section-title">⚠️ 주의사항</h2>
+        <ul class="cautions-list" id="cautionsList">
+          <!-- JS에서 삽입 -->
+        </ul>
+      </div>
+
+      <!-- ⑧ 월 예상 비용 -->
+      <div class="card fade-in delay-4">
+        <h2 class="section-title">💰 월 예상 비용</h2>
+        <div class="monthly-cost-card">
+          <span class="cost-label">🐾 월 평균 유지비 (사료·간식·의료·미용 포함)</span>
+          <span class="cost-value" id="monthlyCost">-</span>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.8rem; color: #999;">
+          * 지역, 개체 크기, 건강 상태에 따라 달라질 수 있습니다
+        </p>
+      </div>
+
+      <!-- ⑨⑩ 액션 버튼 -->
+      <div class="card fade-in delay-4">
+        <div class="action-buttons">
+          <!-- 다른 추천 품종 보기 버튼 -->
+          <button class="btn-other-matches" id="btnOtherMatches">
+            🔍 다른 추천 품종 보기 (2·3순위)
+          </button>
+
+          <div class="btn-row">
+            <!-- 다시 테스트 버튼 -->
+            <button class="btn-retry" id="btnRetry">
+              🔄 다시 테스트
+            </button>
+            <!-- 결과 공유 버튼 -->
+            <button class="btn-share" id="btnShare">
+              📤 결과 공유
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="site-footer">
+    <p>🐾 펫메이트 · 반려동물 입양 전 충분한 정보를 알아보세요 💙</p>
+    <p style="margin-top: 4px; font-size: 0.75rem;">
+      <a href="index.html" style="color: var(--primary);">처음으로</a> ·
+      <a href="test.html" style="color: var(--primary);">테스트 다시 하기</a>
+    </p>
+  </footer>
+
+  <!-- 다른 추천 품종 모달 -->
+  <div class="modal-overlay" id="otherMatchesModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🐾 다른 추천 품종</h2>
+        <button class="btn-close-modal" id="btnCloseModal" aria-label="닫기">✕</button>
+      </div>
+      <!-- 2·3순위 품종 카드 목록 (JS에서 삽입) -->
+      <div id="otherMatchesList">
+        <!-- JS에서 렌더링 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 -->
+  <script src="pets-database.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐾 펫메이트 - 반려동물 매칭 테스트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="test">
+
+  <!-- 헤더 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span>🐾</span>
+        펫메이트
+      </a>
+      <div class="header-subtitle">반려동물 매칭 테스트</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- 진행 바 -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-title">🐾 답변 진행도</span>
+          <span class="progress-count" id="progressText">0/14</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- 페이지 표시 (1/2 또는 2/2) -->
+      <div class="page-indicator-wrap">
+        <span class="page-label">환경 &amp; 생활</span>
+        <div class="page-dot active" id="dot1"></div>
+        <span class="page-label" id="pageIndicator">1 / 2</span>
+        <div class="page-dot" id="dot2"></div>
+        <span class="page-label">성향 &amp; 선호</span>
+      </div>
+
+      <!-- 질문 컨테이너 (JS로 동적 렌더링) -->
+      <div id="questionsContainer">
+        <!-- TestPage 클래스에서 질문 카드를 여기에 삽입합니다 -->
+        <div class="loading-screen">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">테스트를 불러오는 중...</p>
+        </div>
+      </div>
+
+      <!-- 네비게이션 버튼 -->
+      <div class="nav-buttons" id="navButtons">
+        <button class="btn-nav" id="btnPrev" disabled>
+          ← 이전
+        </button>
+        <button class="btn-nav" id="btnNext" disabled>
+          다음 페이지 →
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="site-footer">
+    <p>🐾 펫메이트 · 솔직하게 답변할수록 더 정확한 결과가 나와요!</p>
+  </footer>
+
+  <!-- 스크립트 (데이터베이스 먼저 로드) -->
+  <script src="pets-database.js"></script>
+  <script src="script.js"></script>
+
+  <!-- 페이지 전환 시 페이지 닷 업데이트 -->
+  <script>
+    // 페이지 닷 동기화 (TestPage의 currentPage 변화에 맞춰 업데이트)
+    document.addEventListener('DOMContentLoaded', function() {
+      // 페이지 닷 업데이트를 위한 MutationObserver
+      // pageIndicator 텍스트가 "2 / 2"가 되면 dot2를 활성화
+      const observer = new MutationObserver(function() {
+        const indicator = document.getElementById('pageIndicator');
+        const dot1 = document.getElementById('dot1');
+        const dot2 = document.getElementById('dot2');
+        if (!indicator) return;
+
+        const currentPage = parseInt(indicator.textContent);
+        if (dot1) dot1.classList.toggle('active', currentPage === 1);
+        if (dot2) dot2.classList.toggle('active', currentPage === 2);
+      });
+
+      const indicator = document.getElementById('pageIndicator');
+      if (indicator) {
+        observer.observe(indicator, { childList: true, characterData: true, subtree: true });
+      }
+    });
+  </script>
+</body>
+</html>
