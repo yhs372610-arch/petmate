@@ -191,6 +191,18 @@ const QUESTIONS = [
       { label: '가족 같은 동반자', value: 2 },
       { label: '귀여움과 관찰', value: 3 }
     ]
+  },
+  {
+    id: 15,
+    text: '강아지와 고양이 중 어떤 쪽이 더 끌리나요?',
+    emoji: '🐾',
+    category: '선호',
+    options: [
+      { label: '강아지가 좋아요 🐶', value: 0 },
+      { label: '고양이가 좋아요 🐱', value: 1 },
+      { label: '잘 모르겠어요', value: 2 },
+      { label: '둘 다 좋아요!', value: 3 }
+    ]
   }
 ];
 
@@ -295,6 +307,22 @@ class PetMatcher {
     // 점수 내림차순 정렬
     scored.sort((a, b) => b.score - a.score);
 
+    // ==========================================
+    // 다양성 보장: 선호 없을 때 상위 3개가 전부 강아지면 최우선 고양이로 교체
+    // (고양이를 직접 선호한 경우는 이미 점수로 반영됨 → 적용 안 함)
+    // ==========================================
+    if (!filters.typePreference) {
+      const topThree = scored.slice(0, 3);
+      const hasCat = topThree.some(item => item.breed.type === 'cat');
+      if (!hasCat) {
+        const bestCat = scored.find(item => item.breed.type === 'cat');
+        if (bestCat) {
+          // 3순위 자리를 최고 점수 고양이로 교체
+          scored.splice(2, 1, bestCat);
+        }
+      }
+    }
+
     // 상위 3개 반환 (점수 포함)
     return scored.slice(0, 3).map(item => ({
       ...item.breed,
@@ -319,6 +347,9 @@ class PetMatcher {
     const q8 = answers[7];  // 예산
     const q13 = answers[12]; // 크기 선호
     const q14 = answers[13]; // 키우는 이유
+
+    // Q15: 동물 선호 (0=강아지, 1=고양이, 2=모르겠음, 3=둘다)
+    const q15 = answers[14];
 
     return {
       // 알레르기 필터
@@ -346,7 +377,10 @@ class PetMatcher {
       purpose: ['active', 'emotional', 'companion', 'observation'][q14] || 'companion',
 
       // 성격 선호 (Q12)
-      personalityPref: ['active', 'gentle', 'intelligent', 'calm'][answers[11]] || 'companion'
+      personalityPref: ['active', 'gentle', 'intelligent', 'calm'][answers[11]] || 'companion',
+
+      // 동물 타입 선호 (Q15): 'dog' | 'cat' | null(선호없음)
+      typePreference: q15 === 0 ? 'dog' : q15 === 1 ? 'cat' : null
     };
   }
 
@@ -566,6 +600,16 @@ class PetMatcher {
     if (personalityPref === 'intelligent' && breed.trainability >= 8) score += 5;
     if (personalityPref === 'calm' && breed.activity <= 5 && breed.independence >= 6) score += 5;
 
+    // 동물 타입 선호 보너스/패널티 (Q15, ±20점)
+    // 강아지/고양이를 명확히 선호하는 경우 강력하게 반영
+    if (filters.typePreference === 'dog') {
+      if (breed.type === 'dog') score += 20;
+      else score -= 15;  // 고양이는 패널티
+    } else if (filters.typePreference === 'cat') {
+      if (breed.type === 'cat') score += 20;
+      else score -= 15;  // 강아지는 패널티
+    }
+
     // 최종 점수 클램핑 (0-100 범위)
     return Math.min(100, Math.max(0, score));
   }
@@ -630,7 +674,7 @@ class PetMatcher {
 
 class TestPage {
   constructor() {
-    this.answers = new Array(14).fill(null);  // 14개 답변 저장 (null=미답)
+    this.answers = new Array(15).fill(null);  // 15개 답변 저장 (null=미답)
     this.currentPage = 1;   // 현재 페이지 (1 또는 2)
     this.totalPages = 2;
 
@@ -649,13 +693,13 @@ class TestPage {
   _renderProgressBar() {
     // 답변된 질문 수
     const answered = this.answers.filter(a => a !== null).length;
-    const percent = Math.round((answered / 14) * 100);
+    const percent = Math.round((answered / QUESTIONS.length) * 100);
 
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
 
     if (progressFill) progressFill.style.width = percent + '%';
-    if (progressText) progressText.textContent = `${answered}/14`;
+    if (progressText) progressText.textContent = `${answered}/${QUESTIONS.length}`;
   }
 
   /** 현재 페이지에 해당하는 질문들 렌더링 */
@@ -663,9 +707,9 @@ class TestPage {
     const container = document.getElementById('questionsContainer');
     if (!container) return;
 
-    // 현재 페이지 질문 범위 계산 (1페이지: 1-7, 2페이지: 8-14)
+    // 현재 페이지 질문 범위 계산 (1페이지: 1-7, 2페이지: 8-15)
     const startIdx = (this.currentPage - 1) * 7;
-    const endIdx = startIdx + 7;
+    const endIdx = this.currentPage < this.totalPages ? startIdx + 7 : QUESTIONS.length;
     const pageQuestions = QUESTIONS.slice(startIdx, endIdx);
 
     // 질문 HTML 생성
@@ -754,7 +798,7 @@ class TestPage {
   /** 현재 페이지의 모든 질문에 답변했는지 확인 */
   _isCurrentPageComplete() {
     const startIdx = (this.currentPage - 1) * 7;
-    const endIdx = startIdx + 7;
+    const endIdx = this.currentPage < this.totalPages ? startIdx + 7 : this.answers.length;
     return this.answers.slice(startIdx, endIdx).every(a => a !== null);
   }
 
