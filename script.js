@@ -268,7 +268,7 @@ class PetMatcher {
 
   /**
    * 매칭 실행 - 답변 배열을 받아 상위 3개 품종을 반환
-   * @param {number[]} answers - 14개 질문 답변 (0-based 인덱스)
+   * @param {number[]} answers - 15개 질문 답변 (0-based 인덱스)
    * @returns {Array} - 점수 순으로 정렬된 품종 배열 (최대 3개)
    */
   match(answers) {
@@ -859,8 +859,9 @@ class TestPage {
   /** 미완료 알림 표시 */
   _showIncompleteAlert() {
     const startIdx = (this.currentPage - 1) * 7;
+    const endIdx = this.currentPage < this.totalPages ? startIdx + 7 : this.answers.length;
     const unanswered = [];
-    for (let i = startIdx; i < startIdx + 7; i++) {
+    for (let i = startIdx; i < endIdx; i++) {
       if (this.answers[i] === null) unanswered.push(i + 1);
     }
 
