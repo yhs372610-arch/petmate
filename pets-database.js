@@ -28,7 +28,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '대형',           // 초소형/소형/중형/대형
     weight: '25~34kg',
-    imageUrl: 'https://loremflickr.com/400/300/golden-retriever',
+    imageUrl: 'https://loremflickr.com/1200/800/golden-retriever?lock=1',
 
     // 성격 특성 점수 (1-10)
     activity: 8,            // 활발한 편 - 하루 1-2시간 운동 필요
@@ -93,7 +93,7 @@ window.PETS_DATABASE = [
     emoji: '🐩',
     size: '소형',
     weight: '3~5kg',
-    imageUrl: 'https://loremflickr.com/400/300/bichon-frise',
+    imageUrl: 'https://loremflickr.com/1200/800/bichon-frise?lock=2',
 
     activity: 5,
     sociability: 8,
@@ -144,7 +144,7 @@ window.PETS_DATABASE = [
     emoji: '🐩',
     size: '초소형',
     weight: '2~3kg',
-    imageUrl: 'https://loremflickr.com/400/300/poodle',
+    imageUrl: 'https://loremflickr.com/1200/800/poodle?lock=3',
 
     activity: 6,
     sociability: 8,
@@ -195,7 +195,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '중형',
     weight: '10~14kg',
-    imageUrl: 'https://loremflickr.com/400/300/corgi',
+    imageUrl: 'https://loremflickr.com/1200/800/corgi?lock=4',
 
     activity: 7,
     sociability: 8,
@@ -246,7 +246,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '중형',
     weight: '7~11kg',
-    imageUrl: 'https://loremflickr.com/400/300/shiba-inu',
+    imageUrl: 'https://loremflickr.com/1200/800/shiba-inu?lock=5',
 
     activity: 7,
     sociability: 4,
@@ -297,7 +297,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '대형',
     weight: '25~36kg',
-    imageUrl: 'https://loremflickr.com/400/300/labrador',
+    imageUrl: 'https://loremflickr.com/1200/800/labrador?lock=6',
 
     activity: 8,
     sociability: 10,        // 누구와도 최고 수준의 친화력
@@ -348,7 +348,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '중형',
     weight: '14~20kg',
-    imageUrl: 'https://loremflickr.com/400/300/border-collie',
+    imageUrl: 'https://loremflickr.com/1200/800/border-collie?lock=7',
 
     activity: 10,           // 개 중 최고 수준 에너지
     sociability: 7,
@@ -399,7 +399,7 @@ window.PETS_DATABASE = [
     emoji: '🐩',
     size: '초소형',
     weight: '2~4kg',
-    imageUrl: 'https://loremflickr.com/400/300/maltese',
+    imageUrl: 'https://loremflickr.com/1200/800/maltese?lock=8',
 
     activity: 4,
     sociability: 8,
@@ -450,7 +450,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '초소형',
     weight: '1.5~3kg',
-    imageUrl: 'https://loremflickr.com/400/300/chihuahua',
+    imageUrl: 'https://loremflickr.com/1200/800/chihuahua?lock=9',
 
     activity: 5,
     sociability: 5,
@@ -501,7 +501,7 @@ window.PETS_DATABASE = [
     emoji: '🐕',
     size: '초소형',
     weight: '1.4~3.2kg',
-    imageUrl: 'https://loremflickr.com/400/300/pomeranian',
+    imageUrl: 'https://loremflickr.com/1200/800/pomeranian?lock=10',
 
     activity: 6,
     sociability: 7,
@@ -556,7 +556,7 @@ window.PETS_DATABASE = [
     emoji: '🐱',
     size: '중형',
     weight: '3.5~6kg',
-    imageUrl: 'https://loremflickr.com/400/300/russian-blue-cat',
+    imageUrl: 'https://loremflickr.com/1200/800/russian-blue-cat?lock=11',
 
     activity: 5,
     sociability: 5,
@@ -607,7 +607,7 @@ window.PETS_DATABASE = [
     emoji: '🐱',
     size: '중형',
     weight: '4~8kg',
-    imageUrl: 'https://loremflickr.com/400/300/british-shorthair-cat',
+    imageUrl: 'https://loremflickr.com/1200/800/british-shorthair-cat?lock=12',
 
     activity: 4,
     sociability: 6,
@@ -658,7 +658,7 @@ window.PETS_DATABASE = [
     emoji: '🐆',
     size: '중형',
     weight: '4~7kg',
-    imageUrl: 'https://loremflickr.com/400/300/bengal-cat',
+    imageUrl: 'https://loremflickr.com/1200/800/bengal-cat?lock=13',
 
     activity: 9,            // 고양이 중 최고 수준 활동성
     sociability: 7,
@@ -709,7 +709,7 @@ window.PETS_DATABASE = [
     emoji: '🐱',
     size: '중형',
     weight: '3.5~7kg',
-    imageUrl: 'https://loremflickr.com/400/300/persian-cat',
+    imageUrl: 'https://loremflickr.com/1200/800/persian-cat?lock=14',
 
     activity: 3,            // 매우 조용하고 느긋함
     sociability: 5,
@@ -760,7 +760,7 @@ window.PETS_DATABASE = [
     emoji: '🐱',
     size: '중형',
     weight: '3~5kg',
-    imageUrl: 'https://loremflickr.com/400/300/tabby-cat',
+    imageUrl: 'https://loremflickr.com/1200/800/tabby-cat?lock=15',
 
     activity: 6,
     sociability: 6,

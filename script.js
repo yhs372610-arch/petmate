@@ -1037,7 +1037,7 @@ class ResultPage {
       <div class="other-match-card">
         <div class="other-match-rank">${idx + 2}순위</div>
         <img
-          src="${breed.imageUrl}"
+          src="${breed.imageUrl.replace('1200/800', '200/200')}"
           alt="${breed.name}"
           class="other-match-img"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
