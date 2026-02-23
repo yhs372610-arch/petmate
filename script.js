@@ -65,9 +65,10 @@ const QUESTIONS = [
     emoji: '⏰',
     category: '생활패턴',
     options: [
-      { label: '2~3시간', value: 0 },
-      { label: '6~8시간', value: 1 },
-      { label: '10시간 이상', value: 2 }
+      { label: '1시간 미만', value: 0 },
+      { label: '2~3시간', value: 1 },
+      { label: '6~8시간', value: 2 },
+      { label: '10시간 이상', value: 3 }
     ]
   },
   {
@@ -192,6 +193,53 @@ const QUESTIONS = [
     ]
   }
 ];
+
+// ============================================================
+// 1-B. 품종별 Wikipedia 페이지 매핑 (얼굴 사진 로드용)
+// ============================================================
+
+const WIKI_PAGES = {
+  'golden-retriever':  'Golden Retriever',
+  'bichon-frise':      'Bichon Frise',
+  'toy-poodle':        'Toy poodle',
+  'welsh-corgi':       'Welsh Corgi',
+  'shiba-inu':         'Shiba Inu',
+  'labrador':          'Labrador Retriever',
+  'border-collie':     'Border Collie',
+  'maltese':           'Maltese dog',
+  'chihuahua':         'Chihuahua (dog)',
+  'pomeranian':        'Pomeranian (dog)',
+  'russian-blue':      'Russian Blue',
+  'british-shorthair': 'British Shorthair',
+  'bengal':            'Bengal cat',
+  'persian':           'Persian cat',
+  'korean-shorthair':  'Korean domestic cat'
+};
+
+/**
+ * Wikipedia REST API에서 품종별 대표 얼굴 사진 URL 가져오기
+ * @param {string} breedId - 품종 ID
+ * @param {number} [size=800] - 이미지 너비 (px)
+ * @returns {Promise<string|null>} 이미지 URL 또는 null
+ */
+async function fetchWikiImage(breedId, size = 800) {
+  const wikiPage = WIKI_PAGES[breedId];
+  if (!wikiPage) return null;
+
+  try {
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiPage)}`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.thumbnail && data.thumbnail.source) {
+      // 원하는 크기로 교체 (예: /320px- → /800px-)
+      return data.thumbnail.source.replace(/\/\d+px-/, `/${size}px-`);
+    }
+  } catch (e) {
+    console.warn('Wikipedia 이미지 로드 실패:', breedId, e);
+  }
+  return null;
+}
 
 // ============================================================
 // 2. PetMatcher 클래스 (핵심 매칭 알고리즘)
@@ -391,8 +439,8 @@ class PetMatcher {
     const activity = activityFromQ5 * 0.6 + activityFromQ9 * 0.4;
 
     // 독립성 필요도: Q4로 결정
-    // Q4: 0=2점(2-3시간, 독립성 불필요), 1=6점(6-8시간), 2=9점(10시간↑, 독립성 필수)
-    const independenceNeed = [2, 6, 9][q4] || 5;
+    // Q4: 0=1점(1시간미만,항상집에있음), 1=2점(2-3시간), 2=6점(6-8시간), 3=9점(10시간↑, 독립성 필수)
+    const independenceNeed = [1, 2, 6, 9][q4] || 5;
 
     // 케어 능력: Q6(60%) + Q8(40%)
     // Q6: 0=9점(매일도OK), 1=6점, 2=3점(최소한), 3=1점(털 안빠지는품종)
@@ -887,6 +935,15 @@ class ResultPage {
           placeholder.textContent = breed.emoji;
         }
       };
+
+      // Wikipedia에서 더 선명한 얼굴 사진 비동기 로드
+      fetchWikiImage(breed.id, 800).then(wikiUrl => {
+        if (wikiUrl && petImage.isConnected) {
+          const preload = new Image();
+          preload.onload = () => { petImage.src = wikiUrl; };
+          preload.src = wikiUrl;
+        }
+      });
     }
 
     // 품종명
@@ -1040,6 +1097,7 @@ class ResultPage {
           src="${breed.imageUrl.replace('1200/800', '200/200')}"
           alt="${breed.name}"
           class="other-match-img"
+          data-breed-id="${breed.id}"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
         >
         <div class="other-match-emoji-placeholder" style="display:none">${breed.emoji}</div>
@@ -1053,6 +1111,19 @@ class ResultPage {
         </div>
       </div>
     `).join('');
+
+    // 모달 썸네일도 Wikipedia 이미지로 교체
+    this.otherMatches.forEach((breed) => {
+      fetchWikiImage(breed.id, 200).then(wikiUrl => {
+        if (!wikiUrl) return;
+        const img = container.querySelector(`img[data-breed-id="${breed.id}"]`);
+        if (img) {
+          const preload = new Image();
+          preload.onload = () => { img.src = wikiUrl; };
+          preload.src = wikiUrl;
+        }
+      });
+    });
   }
 
   /** 이벤트 바인딩 */
