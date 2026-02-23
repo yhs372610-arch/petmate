@@ -561,53 +561,54 @@ class PetMatcher {
     let score = Math.max(0, 100 - (weightedDistance / maxDistance) * 100);
 
     // ========== 보너스/패널티 적용 ==========
+    // 각 항목이 총점에 미치는 영향을 균형있게 조정 (과도한 편향 방지)
 
-    // 크기 선호 보너스 (+10점)
+    // 크기 선호 보너스 (+8점)
     if (filters.preferredSize && breed.size === filters.preferredSize) {
-      score += 10;
+      score += 8;
     }
 
     // 소음 걱정 패널티
     if (filters.noiseWorryLevel === 0 && breed.noiseLevel > 5) {
-      score -= 15;  // 매우 걱정 + 시끄러운 품종 → 큰 패널티
+      score -= 10;  // 매우 걱정 + 시끄러운 품종 → 패널티
     } else if (filters.noiseWorryLevel === 1 && breed.noiseLevel > 7) {
-      score -= 10;  // 약간 걱정 + 매우 시끄러운 품종 → 패널티
+      score -= 7;   // 약간 걱정 + 매우 시끄러운 품종 → 소폭 패널티
     }
 
-    // 약한 알레르기 시 저알레르기 보너스 (+8점)
+    // 약한 알레르기 시 저알레르기 보너스 (+6점)
     if (filters.allergyLevel === 1 && breed.hypoallergenic) {
-      score += 8;
+      score += 6;
     }
 
     // 예산 부족 패널티
     const budgetMin = [25, 15, 10, 0][filters.budgetLevel] || 0;
     if (breed.monthlyCostMin > budgetMin + 5) {
-      score -= 12;  // 예산 크게 초과
+      score -= 10;  // 예산 크게 초과
     } else if (breed.monthlyCostMin > budgetMin) {
-      score -= 6;   // 예산 약간 초과
+      score -= 5;   // 예산 약간 초과
     }
 
-    // 목적별 보너스 (+5점)
-    if (filters.purpose === 'active' && breed.activity >= 7) score += 5;
-    if (filters.purpose === 'emotional' && breed.affection >= 8) score += 5;
-    if (filters.purpose === 'companion' && breed.sociability >= 7) score += 5;
-    if (filters.purpose === 'observation' && breed.independence >= 6) score += 5;
+    // 목적별 보너스 (+4점)
+    if (filters.purpose === 'active' && breed.activity >= 7) score += 4;
+    if (filters.purpose === 'emotional' && breed.affection >= 8) score += 4;
+    if (filters.purpose === 'companion' && breed.sociability >= 7) score += 4;
+    if (filters.purpose === 'observation' && breed.independence >= 6) score += 4;
 
-    // 성격 선호 보너스 (+5점)
+    // 성격 선호 보너스 (+4점)
     const personalityPref = filters.personalityPref;
-    if (personalityPref === 'active' && breed.activity >= 7) score += 5;
-    if (personalityPref === 'gentle' && breed.activity <= 5 && breed.careDifficulty <= 5) score += 5;
-    if (personalityPref === 'intelligent' && breed.trainability >= 8) score += 5;
-    if (personalityPref === 'calm' && breed.activity <= 5 && breed.independence >= 6) score += 5;
+    if (personalityPref === 'active' && breed.activity >= 7) score += 4;
+    if (personalityPref === 'gentle' && breed.activity <= 5 && breed.careDifficulty <= 5) score += 4;
+    if (personalityPref === 'intelligent' && breed.trainability >= 8) score += 4;
+    if (personalityPref === 'calm' && breed.activity <= 5 && breed.independence >= 6) score += 4;
 
-    // 동물 타입 선호 보너스/패널티 (Q15, ±20점)
-    // 강아지/고양이를 명확히 선호하는 경우 강력하게 반영
+    // 동물 타입 선호 보너스/패널티 (Q15, ±12점)
+    // 균형있는 점수 반영 (과도한 편향 방지)
     if (filters.typePreference === 'dog') {
-      if (breed.type === 'dog') score += 20;
-      else score -= 15;  // 고양이는 패널티
+      if (breed.type === 'dog') score += 12;
+      else score -= 8;   // 고양이는 소폭 패널티
     } else if (filters.typePreference === 'cat') {
-      if (breed.type === 'cat') score += 20;
-      else score -= 15;  // 강아지는 패널티
+      if (breed.type === 'cat') score += 12;
+      else score -= 8;   // 강아지는 소폭 패널티
     }
 
     // 최종 점수 클램핑 (0-100 범위)
@@ -1139,7 +1140,7 @@ class ResultPage {
       <div class="other-match-card">
         <div class="other-match-rank">${idx + 2}순위</div>
         <img
-          src="${breed.imageUrl.replace('1200/800', '200/200')}"
+          src="${breed.imageUrl.replace('1280x720', '200x200')}"
           alt="${breed.name}"
           class="other-match-img"
           data-breed-id="${breed.id}"
